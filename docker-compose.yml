@@ -9,5 +9,3 @@ services:
         command: sleep infinity
         volumes:
             - ./:/workspace
-        ports:
-            - 3000:3000

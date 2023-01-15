@@ -1,0 +1,70 @@
+name: cicd-actions
+run-name: ${{ github.actor }} front
+on:
+  push:
+    branches:
+      - main
+      - develop
+
+env:
+  STATE_BUCKET: "terraform-state-${{ secrets.APP_NAME }}"
+  STATE_PATH_SUFFIX: "frontend/terraform.tfstate"
+
+jobs:
+  exec:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v3
+      - uses: hashicorp/setup-terraform@v2
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-northeast-1
+      - name: env create [PROD]
+        if: ${{ github.ref_name == 'main'}}
+        env:
+          STATE_PATH: "prod/${{ STATE_PATH_SUFFIX }}"
+      - name: env create [DEV]
+        if: ${{ github.ref_name == 'develop'}}
+        env:
+          STATE_PATH: "dev/${{ STATE_PATH_SUFFIX }}"
+      - id: init
+        run: |
+          terraform init -backend-config="bucket=${{ STATE_BUCKET }}" |
+                         -backend-config="key=${{ STATE_PATH }}"
+      - id: plan
+        run: terraform plan -no-color
+        working-directory: ./bin
+      - run: echo ${{ steps.plan.outputs.stdout }}
+      - run: echo ${{ steps.plan.outputs.stderr }}
+      - run: echo ${{ steps.plan.outputs.exitcode }}
+      # - name: .env create
+      #   run: |
+      #     touch .env
+      # - name: .env create2 [PROD]
+      #   if: ${{ github.ref_name == 'main'}}
+      #   run: |
+      #     echo "REACT_APP_API_URL=${{ secrets.REACT_APP_API_URL }}" >> .env
+      # - name: .env create2 [DEV]
+      #   if: ${{ github.ref_name == 'develop'}}
+      #   run: |
+      #     echo "REACT_APP_API_URL=${{ secrets.REACT_APP_API_URL_DEV }}" >> .env  
+      # - name: App Build
+      #   run: |
+      #     npm install
+      #     npm run build
+      # - name: Upload file to S3 [PROD]
+      #   if: ${{ github.ref_name == 'main'}}
+      #   env:
+      #     S3_UPLOAD_BUCKET: ${{ secrets.S3_UPLOAD_BUCKET }}
+      #   run: |
+      #     aws s3 cp ./build/ s3://$S3_UPLOAD_BUCKET/ --recursive --quiet
+      # - name: Upload file to S3 [DEV]
+      #   if: ${{ github.ref_name == 'develop'}}
+      #   env:
+      #     S3_UPLOAD_BUCKET: ${{ secrets.S3_UPLOAD_BUCKET_DEV }}
+      #   run: |
+      #     aws s3 cp ./build/ s3://$S3_UPLOAD_BUCKET/ --recursive --quiet
