@@ -34,6 +34,7 @@ resource "aws_cloudfront_distribution" "s3_front_distribution" {
   comment             = var.distComment
   default_root_object = var.distDefault_root_object
   is_ipv6_enabled     = true
+  price_class         = "PriceClass_200"
   default_cache_behavior {
     allowed_methods        = ["GET", "HEAD"]
     cached_methods         = ["GET", "HEAD"]
