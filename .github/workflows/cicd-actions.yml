@@ -25,12 +25,12 @@ jobs:
           aws-region: ap-northeast-1
       - name: env create [PROD]
         if: ${{ github.ref_name == 'main'}}
-        env:
-          STATE_PATH: "prod/${{ STATE_PATH_SUFFIX }}"
+        run: |
+          echo "prod/${{ STATE_PATH_SUFFIX }}" >> $STATE_PATH
       - name: env create [DEV]
         if: ${{ github.ref_name == 'develop'}}
-        env:
-          STATE_PATH: "dev/${{ STATE_PATH_SUFFIX }}"
+        run:
+          echo "dev/${{ STATE_PATH_SUFFIX }}" >> $STATE_PATH 
       - id: init
         run: |
           terraform init -backend-config="bucket=${{ STATE_BUCKET }}" |
