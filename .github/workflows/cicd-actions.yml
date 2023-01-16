@@ -36,7 +36,8 @@ jobs:
           terraform init -backend-config="bucket=${{ env.STATE_BUCKET }}" -backend-config="key=${{ env.STATE_PATH }}"
         working-directory: ./bin/main
       - id: plan
-        run: terraform plan -no-color
+        run: |
+          terraform plan -no-color
         working-directory: ./bin/main
       - run: echo ${{ steps.plan.outputs.stdout }}
       - run: echo ${{ steps.plan.outputs.stderr }}
