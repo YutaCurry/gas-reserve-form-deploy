@@ -33,8 +33,8 @@ jobs:
           echo "dev/${{ env.STATE_PATH_SUFFIX }}" >> $STATE_PATH 
       - id: init
         run: |
-          terraform init -backend-config="bucket=${{ STATE_BUCKET }}" |
-                         -backend-config="key=${{ STATE_PATH }}"
+          terraform init -backend-config="bucket=${{ env.STATE_BUCKET }}" |
+                         -backend-config="key=${{ env.STATE_PATH }}"
       - id: plan
         run: terraform plan -no-color
         working-directory: ./bin
