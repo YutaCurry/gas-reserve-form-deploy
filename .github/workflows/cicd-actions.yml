@@ -26,11 +26,11 @@ jobs:
       - name: env create [PROD]
         if: ${{ github.ref_name == 'main'}}
         run: |
-          echo "prod/${{ STATE_PATH_SUFFIX }}" >> $STATE_PATH
+          echo "prod/${{ env.STATE_PATH_SUFFIX }}" >> $STATE_PATH
       - name: env create [DEV]
         if: ${{ github.ref_name == 'develop'}}
         run:
-          echo "dev/${{ STATE_PATH_SUFFIX }}" >> $STATE_PATH 
+          echo "dev/${{ env.STATE_PATH_SUFFIX }}" >> $STATE_PATH 
       - id: init
         run: |
           terraform init -backend-config="bucket=${{ STATE_BUCKET }}" |
