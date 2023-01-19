@@ -41,7 +41,6 @@ jobs:
           terraform init -backend-config="bucket=${{ env.STATE_BUCKET }}" -backend-config="key=${{ env.STATE_PATH }}"
         working-directory: ./bin/main
       - id: plan
-        env:
         run: |
           terraform plan -no-color
         working-directory: ./bin/main
