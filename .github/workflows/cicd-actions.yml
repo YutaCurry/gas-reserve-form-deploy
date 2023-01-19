@@ -32,7 +32,7 @@ jobs:
           echo "TF_VAR_env=prod" >> $GITHUB_ENV
       - name: env create [DEV]
         if: ${{ github.ref_name == 'develop'}}
-        run:
+        run: |
           echo "STATE_PATH=dev/${{ env.STATE_PATH_SUFFIX }}" >> $GITHUB_ENV
           echo "TF_VAR_comment=[DEV]${{ secrets.COMMENT }}" >> $GITHUB_ENV
           echo "TF_VAR_env=dev" >> $GITHUB_ENV
