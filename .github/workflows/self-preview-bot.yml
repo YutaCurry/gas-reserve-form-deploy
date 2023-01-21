@@ -2,7 +2,7 @@ name: create PR by github-actions[bot]
 on:
   push:
     branches:
-      - 'features/dev/**'
+      - 'feature/dev/**'
 env:
   BASE_BRANCH: develop
   REVIEWER: YutaCurry
