@@ -45,6 +45,7 @@ jobs:
           terraform plan -no-color
         working-directory: ./bin/main
         continue-on-error: true
+      # TODO エラー扱いとなるが一旦回避
       - run: echo ${{ steps.plan.outputs.stdout }}
         continue-on-error: true
       - run: echo ${{ steps.plan.outputs.stderr }}
