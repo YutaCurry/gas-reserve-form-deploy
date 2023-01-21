@@ -14,7 +14,7 @@ env:
 jobs:
   exec:
     runs-on: ubuntu-latest
-    enviroment: terraformApply
+    environment: terraformApply
     steps:
       - uses: actions/checkout@v3
       - uses: hashicorp/setup-terraform@v2
