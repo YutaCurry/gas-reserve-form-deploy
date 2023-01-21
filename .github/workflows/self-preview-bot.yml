@@ -1,11 +1,10 @@
 name: create PR by github-actions[bot]
 on:
   push:
-    branches-ignore:
-      - "main"
-      - "develop"
+    branches:
+      - "features/dev/**"
 env:
-  BASE_BRANCH: ${{ github.base_ref }}
+  BASE_BRANCH: develop
   REVIEWER: YutaCurry
 # commnet
 jobs:
