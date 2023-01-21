@@ -1,5 +1,5 @@
-name: cicd-actions
-run-name: ${{ github.actor }} front
+name: terraform-apply
+run-name: terraform-apply
 on:
   push:
     branches:
