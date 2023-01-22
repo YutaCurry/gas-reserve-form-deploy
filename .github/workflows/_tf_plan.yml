@@ -103,24 +103,27 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            console.log('error')
-            # const output = `#### Terraform Initialization `
-            # const output = `#### Terraform Initialization ⚙️\`${{ steps.init.outcome }}\`
-            # #### Terraform Plan 📖\`${{ steps.plan.outcome }}\`
-            
-            # <details><summary>Show Plan</summary>
-            
-            # \`\`\`\n
-            # ${ process.env.PLAN }
-            # \`\`\`
-            
-            # </details>
-            
-            # *Pusher: @${{ github.actor }}, Action: \`${{ github.event_name }}\`, Working Directory: \`${{ inputs.TF_WORK_DIR }}\`, Workflow: \`${{ github.workflow }}\`*`;
 
-            # github.issues.createComment({
-            #   issue_number: ${{ inputs.PR_ID }}
-            #   owner: context.repo.owner,
-            #   repo: context.repo.repo,
-            #   body: output
-            # })
+            console.log('error')
+            const output = 'info'
+            console.log({output})
+          # const output = `#### Terraform Initialization `
+          # const output = `#### Terraform Initialization ⚙️\`${{ steps.init.outcome }}\`
+          # #### Terraform Plan 📖\`${{ steps.plan.outcome }}\`
+          
+          # <details><summary>Show Plan</summary>
+          
+          # \`\`\`\n
+          # ${ process.env.PLAN }
+          # \`\`\`
+          
+          # </details>
+          
+          # *Pusher: @${{ github.actor }}, Action: \`${{ github.event_name }}\`, Working Directory: \`${{ inputs.TF_WORK_DIR }}\`, Workflow: \`${{ github.workflow }}\`*`;
+
+          # github.issues.createComment({
+          #   issue_number: ${{ inputs.PR_ID }}
+          #   owner: context.repo.owner,
+          #   repo: context.repo.repo,
+          #   body: output
+          # })
