@@ -7,7 +7,7 @@ env:
   BASE_BRANCH: develop
   REVIEWER: YutaCurry
   GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-# commnet
+
 jobs:
   create_pr:
     # ブランチが作成されただけならスキップ
