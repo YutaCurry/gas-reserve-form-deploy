@@ -83,10 +83,6 @@ jobs:
           script: |
             console.log('error')
 
-
-
-
-            
             # const output = `#### Terraform Initialization ⚙️\`${{ steps.init.outcome }}\`
             # #### Terraform Plan 📖\`${{ steps.plan.outcome }}\`
             
