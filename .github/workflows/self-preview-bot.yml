@@ -30,12 +30,17 @@ jobs:
       # PRがまだなかったらghコマンドで生成
       - name: Create PR
         if: ${{ steps.check_pr.outputs.count == '' }}
-        run: gh pr create --fill -B ${{ env.BASE_BRANCH }} -r ${{ env.REVIEWER }}
+        run: |
+          gh pr create --fill -B ${{ env.BASE_BRANCH }} -r ${{ env.REVIEWER }}    
+      - name: Get PR
+        run: |
+          echo "pr_id=$(gh pr list -B ${{ env.BASE_BRANCH }} -H ${{ github.ref_name }} --json 'id' -q '.[].id')" >> $GITHUB_OUTPUT
   write_plan_pr:
+    if: ${{ steps.check_pr.outputs.count != '' }}
     uses: ./.github/workflows/_tf_plan.yml
     with:
       TF_WORK_DIR: bin/main
-      PR_ID: 1
+      PR_ID: ${{ steps.check_pr.outputs.pr_id }}
       BASE_BRANCH: develop
     secrets: inherit
     needs: create_pr
