@@ -39,6 +39,7 @@ jobs:
     outputs:
       pr_count: ${{ steps.check_pr.outputs.count }}
       pr_id: ${{ steps.get_pr.outputs.pr_id }}
+      base_branch: ${{ env.BASE_BRANCH }}
   write_plan_pr:
     needs: create_pr
     if: ${{ needs.create_pr.outputs.pr_count != '' }}
@@ -46,7 +47,7 @@ jobs:
     with:
       TF_WORK_DIR: bin/main
       # BASE_BRANCH: develop
-      BASE_BRANCH: ${{ env.BASE_BRANCH }}
+      BASE_BRANCH: ${{ needs.create_pr.outputs.base_branch }}
     secrets:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
