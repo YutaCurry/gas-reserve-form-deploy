@@ -103,10 +103,11 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const output = `#### Terraform Initialization ⚙️\`${{ steps.init.outcome }}\`
-            #### Terraform Plan 📖\`${{ steps.plan.outcome }}\`
+
+            const output = `#### Terraform Initialization `
+            # const output = `#### Terraform Initialization ⚙️\`${{ steps.init.outcome }}\`
+            # #### Terraform Plan 📖\`${{ steps.plan.outcome }}\`
             
-            `
             # <details><summary>Show Plan</summary>
             
             # \`\`\`\n
