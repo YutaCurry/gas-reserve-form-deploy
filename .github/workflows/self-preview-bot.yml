@@ -40,7 +40,7 @@ jobs:
     uses: ./.github/workflows/_tf_plan.yml
     with:
       TF_WORK_DIR: bin/main
-      PR_ID: ${{ steps.check_pr.outputs.pr_id }}
+      PR_ID: "${{ steps.check_pr.outputs.pr_id }}"
       BASE_BRANCH: develop
     secrets: inherit
     needs: create_pr
