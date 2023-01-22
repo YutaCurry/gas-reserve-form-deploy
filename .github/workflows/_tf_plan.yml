@@ -25,6 +25,13 @@ on:
         required: true
       COMMENT:
         required: true
+      APP_NAME:
+        required: true
+
+env:
+  STATE_BUCKET: "terraform-state-${{ secrets.APP_NAME }}"
+  STATE_PATH_SUFFIX: "frontend/terraform.tfstate"
+  TF_VAR_appName: ${{ secrets.APP_NAME }}
 
 jobs:
   tf_plan:
