@@ -48,12 +48,12 @@ jobs:
       TF_WORK_DIR: bin/main
       # BASE_BRANCH: develop
       BASE_BRANCH: ${{ needs.create_pr.outputs.base_branch }}
+      PR_ID: ${{ needs.create_pr.outputs.pr_id }}
     secrets:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       COMMENT: ${{ secrets.COMMENT }}
       APP_NAME: ${{ secrets.APP_NAME }}
-      PR_ID: ${{ needs.create_pr.outputs.pr_id }}
 
 
       # pull requestにterrafrom planの内容を載せる
