@@ -2,7 +2,7 @@ name: create PR by github-actions[bot]
 on:
   push:
     branches:
-      - 'feature/dev/**'
+      - '**/dev/**'
 env:
   BASE_BRANCH: develop
   REVIEWER: YutaCurry
@@ -10,7 +10,7 @@ env:
 jobs:
   create_pr:
     # ブランチが作成されただけならスキップ
-    if: ${{ !github.event.created }}
+    # if: ${{ !github.event.created }}
     runs-on: ubuntu-latest
     steps:
       # チェックアウト
@@ -34,3 +34,17 @@ jobs:
         env:
           # github-actions[bot]のトークンを使って作成するために設定
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Get PR
+        if: ${{ steps.check_pr.outputs.count == '' }}
+        run: gh pr create --fill -B ${{ env.BASE_BRANCH }} -r ${{ env.REVIEWER }}
+        env:
+          # github-actions[bot]のトークンを使って作成するために設定
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: write plan
+        uses: YutaCurry/gas-reserve-form-deploy/.github/workflows/_tf_plan.yml@develop
+        with:
+          TF_WORK_DIR: bin
+          PR_ID: 1
+
+
+      # pull requestにterrafrom planの内容を載せる
