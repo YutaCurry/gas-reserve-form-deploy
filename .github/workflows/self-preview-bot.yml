@@ -45,8 +45,8 @@ jobs:
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       COMMENT: ${{ secrets.COMMENT }}
       APP_NAME: ${{ secrets.APP_NAME }}
-      BASE_BRANCH: ${{ env.BASE_BRANCH }}
-      PR_ID: ${{  jobs.create_pr.steps.check_pr.outputs.pr_id }}
+      BASE_BRANCH: develop
+      PR_ID: ${{ jobs.create_pr.steps.check_pr.outputs.pr_id }}
     needs: create_pr
 
 
