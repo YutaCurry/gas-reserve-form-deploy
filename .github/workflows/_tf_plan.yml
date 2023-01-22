@@ -105,10 +105,11 @@ jobs:
           script: |
 
             console.log('error')
-            const output = 'info'
+
+            const output = `#### Terraform Initialization ⚙️\`${{ steps.init.outcome }}\`
+            `
             console.log({output})
-          # const output = `#### Terraform Initialization `
-          # const output = `#### Terraform Initialization ⚙️\`${{ steps.init.outcome }}\`
+
           # #### Terraform Plan 📖\`${{ steps.plan.outcome }}\`
           
           # <details><summary>Show Plan</summary>
