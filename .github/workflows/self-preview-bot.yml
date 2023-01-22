@@ -6,6 +6,7 @@ on:
 env:
   BASE_BRANCH: develop
   REVIEWER: YutaCurry
+  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 # commnet
 jobs:
   create_pr:
@@ -26,20 +27,10 @@ jobs:
         id: check_pr
         run: |
           echo "count=$(gh pr list -B ${{ env.BASE_BRANCH }} -H ${{ github.ref_name }} --json 'id' -q '.[] | length')" >> $GITHUB_OUTPUT
-      
-      - name: log
-        run: |
-          echo "count: [$(gh pr list -B ${{ env.BASE_BRANCH }} -H ${{ github.ref_name }} --json 'id')]"
-        env:
-          # github-actions[bot]のトークンを使って作成するために設定
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       # PRがまだなかったらghコマンドで生成
       - name: Create PR
         if: ${{ steps.check_pr.outputs.count == '' }}
         run: gh pr create --fill -B ${{ env.BASE_BRANCH }} -r ${{ env.REVIEWER }}
-        env:
-          # github-actions[bot]のトークンを使って作成するために設定
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   write_plan_pr:
     uses: ./.github/workflows/_tf_plan.yml
     with:
