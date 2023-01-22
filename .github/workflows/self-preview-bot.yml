@@ -45,12 +45,12 @@ jobs:
     uses: ./.github/workflows/_tf_plan.yml
     with:
       TF_WORK_DIR: bin/main
+      BASE_BRANCH: ${{ env.BASE_BRANCH }}
     secrets:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       COMMENT: ${{ secrets.COMMENT }}
       APP_NAME: ${{ secrets.APP_NAME }}
-      BASE_BRANCH: develop
       PR_ID: ${{ needs.create_pr.outputs.pr_id }}
 
 
