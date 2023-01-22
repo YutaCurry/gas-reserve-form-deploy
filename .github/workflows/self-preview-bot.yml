@@ -41,13 +41,10 @@ jobs:
           # github-actions[bot]のトークンを使って作成するために設定
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   write_plan_pr:
-    runs-on: ubuntu-latest
-    steps:
-      - name: write plan
-        uses: YutaCurry/gas-reserve-form-deploy/.github/workflows/_tf_plan.yml@develop
-        with:
-          TF_WORK_DIR: bin
-          PR_ID: 1
+    uses: YutaCurry/gas-reserve-form-deploy/.github/workflows/_tf_plan.yml@develop
+    with:
+      TF_WORK_DIR: bin
+      PR_ID: 1
 
 
       # pull requestにterrafrom planの内容を載せる
