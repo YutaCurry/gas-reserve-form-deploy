@@ -41,7 +41,7 @@ jobs:
           # github-actions[bot]のトークンを使って作成するために設定
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   write_plan_pr:
-    uses: YutaCurry/gas-reserve-form-deploy/.github/workflows/_tf_plan.yml@develop
+    uses: YutaCurry/gas-reserve-form-deploy/.github/workflows/_tf_plan.yml@${{ github.ref_name }}
     with:
       TF_WORK_DIR: bin
       PR_ID: 1
