@@ -8,12 +8,12 @@ on:
       TF_WORK_DIR:
         type: string
         required: true
-      PR_ID:
-        type: string
-        required: true
-      BASE_BRANCH:
-        type: string
-        required: true
+      # PR_ID:
+      #   type: string
+      #   required: true
+      # BASE_BRANCH:
+      #   type: string
+      #   required: true
     # secrets:
       # SLACK_WEBHOOK:
       #   required: true
@@ -29,6 +29,10 @@ on:
       COMMENT:
         required: true
       APP_NAME:
+        required: true
+      BASE_BRANCH:
+        required: true
+      PR_ID:
         required: true
 
 env:
