@@ -11,6 +11,9 @@ on:
       PR_ID:
         type: string
         required: true
+      BASE_BRANCH:
+        type: string
+        required: true
     # secrets:
       # SLACK_WEBHOOK:
       #   required: true
@@ -50,22 +53,24 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ap-northeast-1
       - name: env create [PROD]
-        if: ${{ github.ref_name == 'main'}}
+        if: ${{ inputs.BASE_BRANCH == 'main'}}
         run: |
           echo "STATE_PATH=prod/${{ env.STATE_PATH_SUFFIX }}" >> $GITHUB_ENV
           echo "TF_VAR_comment=[PROD]${{ secrets.COMMENT }}" >> $GITHUB_ENV
           echo "TF_VAR_env=prod" >> $GITHUB_ENV
       - name: env create [DEV]
-        if: ${{ github.ref_name == 'develop'}}
+        if: ${{ inputs.BASE_BRANCH == 'develop'}}
         run: |
           echo "STATE_PATH=dev/${{ env.STATE_PATH_SUFFIX }}" >> $GITHUB_ENV
           echo "TF_VAR_comment=[DEV]${{ secrets.COMMENT }}" >> $GITHUB_ENV
           echo "TF_VAR_env=dev" >> $GITHUB_ENV
       - id: init
+        if: ${{ inputs.BASE_BRANCH == 'main' || inputs.BASE_BRANCH == 'develop' }}
         run: |
           terraform init -backend-config="bucket=${{ env.STATE_BUCKET }}" -backend-config="key=${{ env.STATE_PATH }}"
         working-directory: ./bin/main
       - id: plan
+        if: ${{ inputs.BASE_BRANCH == 'main' || inputs.BASE_BRANCH == 'develop' }}
         run: |
           terraform plan -no-color
         working-directory: ./bin/main
@@ -81,6 +86,7 @@ jobs:
       # 大量に差分が出た場合は差分を見るのではなく plan/apply の成否を見たい
       # これらを考慮して65000文字に制限する
       - name: truncate terraform plan result
+        if: ${{ inputs.BASE_BRANCH == 'main' || inputs.BASE_BRANCH == 'develop' }}
         run: |
           plan=$(cat <<'EOF'
           ${{ format('{0}{1}', steps.plan.outputs.stdout, steps.plan.outputs.stderr) }}
@@ -92,6 +98,7 @@ jobs:
       # - run: echo "${{ process.env.PLAN }}" >> $GITHUB_STEP_SUMMARY
 
       - name: create comment from plan result
+        if: ${{ inputs.BASE_BRANCH == 'main' || inputs.BASE_BRANCH == 'develop' }}
         uses: actions/github-script@v6
         with:
           script: console.log('error')

@@ -36,11 +36,8 @@ jobs:
     with:
       TF_WORK_DIR: bin
       PR_ID: 1
-    secrets:
-      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      COMMENT: ${{ secrets.COMMENT }}
-      APP_NAME: ${{ secrets.APP_NAME }}
+      BASE_BRANCH: ${{ env.BASE_BRANCH }}
+    secrets: inherit
     needs: create_pr
 
 
