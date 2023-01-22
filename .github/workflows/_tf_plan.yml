@@ -116,9 +116,9 @@ jobs:
             
             *Pusher: @${{ github.actor }}, Action: \`${{ github.event_name }}\`, Working Directory: \`${{ inputs.TF_WORK_DIR }}\`, Workflow: \`${{ github.workflow }}\`*`;
 
-            github.issues.createComment({
-              issue_number: ${{ inputs.PR_ID }}
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: output
-            })
+            # github.issues.createComment({
+            #   issue_number: ${{ inputs.PR_ID }}
+            #   owner: context.repo.owner,
+            #   repo: context.repo.repo,
+            #   body: output
+            # })
