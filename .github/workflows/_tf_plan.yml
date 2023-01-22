@@ -103,8 +103,8 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-
-            const output = `#### Terraform Initialization `
+            console.log('error')
+            # const output = `#### Terraform Initialization `
             # const output = `#### Terraform Initialization ⚙️\`${{ steps.init.outcome }}\`
             # #### Terraform Plan 📖\`${{ steps.plan.outcome }}\`
             
