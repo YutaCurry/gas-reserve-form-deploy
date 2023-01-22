@@ -113,8 +113,8 @@ jobs:
             \`\`\`
             
             </details>
-            
-            *Pusher: @${{ github.actor }}, Action: \`${{ github.event_name }}\`, Working Directory: \`${{ inputs.TF_WORK_DIR }}\`, Workflow: \`${{ github.workflow }}\`*`;
+            `
+            # *Pusher: @${{ github.actor }}, Action: \`${{ github.event_name }}\`, Working Directory: \`${{ inputs.TF_WORK_DIR }}\`, Workflow: \`${{ github.workflow }}\`*`;
 
             # github.issues.createComment({
             #   issue_number: ${{ inputs.PR_ID }}
