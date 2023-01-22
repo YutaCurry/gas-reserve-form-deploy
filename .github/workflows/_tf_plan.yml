@@ -111,7 +111,7 @@ jobs:
             console.log({output})
 
             github.issues.createComment({
-              issue_number: context.inputs.PR_ID
+              issue_number: 1,
               owner: context.repo.owner,
               repo: context.repo.repo,
               body: output
