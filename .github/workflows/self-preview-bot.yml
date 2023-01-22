@@ -29,7 +29,9 @@ jobs:
           
       - name: log
         run: |
-          echo ${{ steps.check_pr.outputs.count }}
+          gh pr list -B ${{ env.BASE_BRANCH }} -H ${{ github.ref_name }}
+          gh pr list -B ${{ env.BASE_BRANCH }} -H ${{ github.ref_name }} --json 'id'
+          gh pr list -B ${{ env.BASE_BRANCH }} -H ${{ github.ref_name }} --json 'id' -q '.[] | length'
       # PRがまだなかったらghコマンドで生成
       - name: Create PR
         if: ${{ steps.check_pr.outputs.count == '' }}
