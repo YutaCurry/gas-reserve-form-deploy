@@ -30,8 +30,6 @@ on:
         required: true
       APP_NAME:
         required: true
-      GITHUB_TOKEN:
-        required: true
 
 env:
   STATE_BUCKET: "terraform-state-${{ secrets.APP_NAME }}"
@@ -108,19 +106,20 @@ jobs:
             const output = `#### Terraform Initialization ⚙️\`${{ steps.init.outcome }}\`
             #### Terraform Plan 📖\`${{ steps.plan.outcome }}\`
             
-            <details><summary>Show Plan</summary>
+            `
+            # <details><summary>Show Plan</summary>
             
-            \`\`\`\n
-            ${ process.env.PLAN }
-            \`\`\`
+            # \`\`\`\n
+            # ${ process.env.PLAN }
+            # \`\`\`
             
-            </details>
+            # </details>
             
-            *Pusher: @${{ github.actor }}, Action: \`${{ github.event_name }}\`, Working Directory: \`${{ inputs.TF_WORK_DIR }}\`, Workflow: \`${{ github.workflow }}\`*`;
+            # *Pusher: @${{ github.actor }}, Action: \`${{ github.event_name }}\`, Working Directory: \`${{ inputs.TF_WORK_DIR }}\`, Workflow: \`${{ github.workflow }}\`*`;
 
-            github.issues.createComment({
-              issue_number: ${{ inputs.PR_ID }}
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: output
-            })
+            # github.issues.createComment({
+            #   issue_number: ${{ inputs.PR_ID }}
+            #   owner: context.repo.owner,
+            #   repo: context.repo.repo,
+            #   body: output
+            # })
