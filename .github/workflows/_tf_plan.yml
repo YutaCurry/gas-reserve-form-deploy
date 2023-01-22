@@ -80,8 +80,7 @@ jobs:
       - name: create comment from plan result
         uses: actions/github-script@v6
         with:
-          script: |
-            console.log('error')
+          script: console.log('error')
 
             # const output = `#### Terraform Initialization ⚙️\`${{ steps.init.outcome }}\`
             # #### Terraform Plan 📖\`${{ steps.plan.outcome }}\`
