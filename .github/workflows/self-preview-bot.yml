@@ -26,17 +26,22 @@ jobs:
       - name: check PR
         id: check_pr
         run: |
-          echo "count=$(gh pr list -B ${{ env.BASE_BRANCH }} -H ${{ github.ref_name }} --json 'id' -q '.[] | length')" >> $GITHUB_ENV
+          echo "count=$(gh pr list -B ${{ env.BASE_BRANCH }} -H ${{ github.ref_name }} --json 'id' -q '.[] | length')" >> $GITHUB_OUTPUT
       # PRがまだなかったらghコマンドで生成
       - name: Create PR
-        if: ${{ env.count == '' }}
+        if: ${{ steps.check_pr.outputs.count == '' }}
         run: |
           gh pr create --fill -B ${{ env.BASE_BRANCH }} -r ${{ env.REVIEWER }}    
-      - name: Get PR
+      - id: get_pr
+        name: Get PR
         run: |
-          echo "pr_id=$(gh pr list -B ${{ env.BASE_BRANCH }} -H ${{ github.ref_name }} --json 'id' -q '.[].id')" >> $GITHUB_ENV
+          echo "pr_id=$(gh pr list -B ${{ env.BASE_BRANCH }} -H ${{ github.ref_name }} --json 'id' -q '.[].id')" >> $GITHUB_OUTPUT
+    outputs:
+      pr_count: ${{ steps.check_pr.outputs.count }}
+      pr_id: ${{ steps.get_pr.outputs.pr_id }}
   write_plan_pr:
-    if: ${{ env.count != '' }}
+    needs: create_pr
+    if: ${{ needs.create_pr.outputs.pr_count != '' }}
     uses: ./.github/workflows/_tf_plan.yml
     with:
       TF_WORK_DIR: bin/main
@@ -45,9 +50,8 @@ jobs:
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       COMMENT: ${{ secrets.COMMENT }}
       APP_NAME: ${{ secrets.APP_NAME }}
-      BASE_BRANCH: develop
-      PR_ID: ${{ env.pr_id }}
-    needs: create_pr
+      BASE_BRANCH: ${{ env.BASE_BRANCH }}
+      PR_ID: ${{ needs.create_pr.outputs.pr_id }}
 
 
       # pull requestにterrafrom planの内容を載せる
