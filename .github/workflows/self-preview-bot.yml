@@ -36,7 +36,7 @@ jobs:
     with:
       TF_WORK_DIR: bin/main
       PR_ID: 1
-      BASE_BRANCH2: '${{ env.BASE_BRANCH }}'
+      BASE_BRANCH: '${{ env.BASE_BRANCH }}'
     secrets: inherit
     needs: create_pr
 
