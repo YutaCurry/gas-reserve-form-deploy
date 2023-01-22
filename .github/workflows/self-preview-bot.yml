@@ -30,6 +30,9 @@ jobs:
       - name: log
         run: |
           echo "count: [$(gh pr list -B ${{ env.BASE_BRANCH }} -H ${{ github.ref_name }} --json 'id')]"
+        env:
+          # github-actions[bot]のトークンを使って作成するために設定
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       # PRがまだなかったらghコマンドで生成
       - name: Create PR
         if: ${{ steps.check_pr.outputs.count == '' }}
