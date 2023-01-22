@@ -45,6 +45,7 @@ jobs:
     with:
       TF_WORK_DIR: bin
       PR_ID: 1
+    needs: create_pr
 
 
       # pull requestにterrafrom planの内容を載せる
