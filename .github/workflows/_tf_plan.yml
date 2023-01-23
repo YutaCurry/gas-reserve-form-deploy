@@ -2,9 +2,6 @@ name: callee terraform plan workflow
 on:
   workflow_call:
     inputs:
-      # SLACK_MESSAGE_TARGET_ENV:
-      #   type: string
-      #   required: true
       TF_WORK_DIR:
         type: string
         required: true
@@ -14,13 +11,6 @@ on:
       BASE_BRANCH:
         type: string
         required: true
-    # secrets:
-      # SLACK_WEBHOOK:
-      #   required: true
-      # WORKLOAD_IDENTITY_PROVIDER:
-      #   required: true
-      # SERVICE_ACCOUNT:
-      #   required: true
     secrets:
       AWS_ACCESS_KEY_ID:
         required: true
@@ -30,10 +20,6 @@ on:
         required: true
       APP_NAME:
         required: true
-      # BASE_BRANCH:
-      #   required: true
-      # PR_ID:
-      #   required: true
 
 env:
   STATE_BUCKET: "terraform-state-${{ secrets.APP_NAME }}"
@@ -47,6 +33,8 @@ jobs:
       id-token: write
       contents: read
       pull-requests: write
+    env:
+      tfstate-branch: ${{ inputs.BASE_BRANCH == 'main' || inputs.BASE_BRANCH == 'develop' }}
     steps:
       - uses: actions/checkout@v3
       - uses: hashicorp/setup-terraform@v2
