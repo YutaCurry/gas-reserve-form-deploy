@@ -75,7 +75,7 @@ jobs:
           echo "${apply}" | grep -v 'Refreshing state' | tail -c 65000 >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
       - name: create comment from apply result
-        if: ${{ env.is-tfstate-branch && github.event_name == 'pull_reqeust' }}
+        if: ${{ env.is-tfstate-branch && github.event_name == 'pull_request' }}
         uses: actions/github-script@v6
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
