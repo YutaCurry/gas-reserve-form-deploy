@@ -1,0 +1,16 @@
+name: create PR by github-actions[bot]
+on:
+  pull_request:
+    branches:
+      - 'main'
+    types:
+      - closed
+env:
+  REVIEWER: YutaCurry
+jobs:
+  tf_apply:
+    uses: ./.github/workflows/_tf_apply.yml
+    with:
+      TF_WORK_DIR: bin/main
+      BASE_BRANCH: main
+    secrets: inherit

@@ -25,9 +25,10 @@ jobs:
       - id: get_pr
         name: Get PR
         run: |
+          echo "count=$(gh pr list -B ${{ env.BASE_BRANCH }} -H ${{ github.ref_name }} --json 'id' -q '.[] | length')" >> $GITHUB_OUTPUT
           echo "pr_id=$(gh pr list -B ${{ env.BASE_BRANCH }} -H ${{ github.ref_name }} --json 'number' -q '.[].number')" >> $GITHUB_OUTPUT
     outputs:
-      pr_count: ${{ steps.check_pr.outputs.count }}
+      pr_count: ${{ steps.get_pr.outputs.count }}
       pr_id: ${{ steps.get_pr.outputs.pr_id }}
       base_branch: ${{ env.BASE_BRANCH }}
   write_plan_pr:
