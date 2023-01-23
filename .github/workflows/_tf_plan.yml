@@ -67,16 +67,6 @@ jobs:
           terraform plan -no-color
         working-directory: ./bin/main
         continue-on-error: true
-      # TODO エラー扱いとなるが一旦回避
-      # - run: echo "${{ steps.plan.outputs.stdout }}" >> $GITHUB_STEP_SUMMARY
-      #   continue-on-error: true
-      # - run: echo "${{ steps.plan.outputs.stderr }}" >> $GITHUB_STEP_SUMMARY
-      # - run: echo "${{ steps.plan.outputs.exitcode }}" >> $GITHUB_STEP_SUMMARY
-      # 1. PRのコメント欄に65536文字数制限がある
-      # 2. github-script もしくは GitHub Actions Workflow 内にも文字数制限がある
-      # よって、terraform plan/apply の結果を予め削る必要がある
-      # 大量に差分が出た場合は差分を見るのではなく plan/apply の成否を見たい
-      # これらを考慮して65000文字に制限する
       - name: truncate terraform plan result
         if: ${{ env.is-tfstate-branch }}
         run: |
@@ -87,8 +77,6 @@ jobs:
           echo "PLAN<<EOF" >> $GITHUB_ENV
           echo "${plan}" | grep -v 'Refreshing state' | tail -c 65000 >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
-      # - run: echo "${{ process.env.PLAN }}" >> $GITHUB_STEP_SUMMARY
-
       - name: create comment from plan result
         if: ${{ env.is-tfstate-branch }}
         uses: actions/github-script@v6
