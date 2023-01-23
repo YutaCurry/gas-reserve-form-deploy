@@ -6,6 +6,7 @@ on:
 env:
   BASE_BRANCH: develop
   REVIEWER: YutaCurry
+  GH_TOKEN: ${{ github.token }}
 jobs:
   create_pr:
     runs-on: ubuntu-latest
