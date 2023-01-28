@@ -25,7 +25,6 @@ env:
   STATE_BUCKET: "terraform-state-${{ secrets.APP_NAME }}"
   STATE_PATH: "${{ inputs.ENV }}/frontend/terraform.tfstate"
   TF_VAR_appName: ${{ secrets.APP_NAME }}
-  TF_WORK_DIR: ${{ inputs.WORK_DIR }}
   TF_VAR_env: ${{ inputs.ENV }}
 jobs:
   tf_plan:
@@ -53,11 +52,11 @@ jobs:
       - id: init
         run: |
           terraform init -backend-config="bucket=${{ env.STATE_BUCKET }}" -backend-config="key=${{ env.STATE_PATH }}"
-        working-directory: ./bin/main
+        working-directory: ${{ inputs.WORK_DIR }}
       - id: plan
         run: |
           terraform plan -no-color
-        working-directory: ./bin/main
+        working-directory: ${{ inputs.WORK_DIR }}
         continue-on-error: true
       - name: truncate terraform plan result
         run: |
@@ -83,7 +82,7 @@ jobs:
             
             </details>
             
-            *Pusher: @${{ github.actor }}, Action: \`${{ github.event_name }}\`, Working Directory: \`${{ inputs.TF_WORK_DIR }}\`, Workflow: \`${{ github.workflow }}\`*`;
+            *Pusher: @${{ github.actor }}, Action: \`${{ github.event_name }}\`, Working Directory: \`${{ inputs.WORK_DIR }}\`, Workflow: \`${{ github.workflow }}\`*`;
 
             github.rest.issues.createComment({
               issue_number: "${{ inputs.PR_ID }}",
