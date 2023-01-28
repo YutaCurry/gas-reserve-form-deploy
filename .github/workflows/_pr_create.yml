@@ -11,12 +11,14 @@ on:
     outputs:
       pr_id:
         description: "作成したプルリクエストのID"
-        value: ${{ jobs.create_pr.steps.get_pr.outputs.pr_id }}
+        value: ${{ jobs.create_pr.outputs.pr_id }}
 jobs:
   create_pr:
     runs-on: ubuntu-latest
     env:
       GH_TOKEN: ${{ github.token }}
+    outputs:
+      pr_id: ${{ steps.get_pr.outputs.pr_id }}
     steps:
       - uses: actions/checkout@v3
         with:
