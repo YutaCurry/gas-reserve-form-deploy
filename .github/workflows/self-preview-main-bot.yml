@@ -2,12 +2,12 @@ name: create PR by github-actions[bot]
 on:
   push:
     branches:
-      - '**/dev/**'
+      - 'develop'
 jobs:
   create_pr:
     uses: ./.github/workflows/_pr_create.yml
     with:
-      base_branch: develop
+      base_branch: main
       reviewer: YutaCurry
   write_plan_pr:
     needs: create_pr
@@ -16,5 +16,5 @@ jobs:
     with:
       WORK_DIR: bin/main
       PR_ID: ${{ needs.create_pr.outputs.pr_id }}
-      ENV: dev
+      ENV: main
     secrets: inherit
