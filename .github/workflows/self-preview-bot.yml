@@ -36,7 +36,7 @@ jobs:
     if: ${{ needs.create_pr.outputs.pr_count != '' }}
     uses: ./.github/workflows/_tf_plan.yml
     with:
-      WORK_DIR: bin/main
+      WORK_DIR: "bin/main"
       PR_ID: ${{ needs.create_pr.outputs.pr_id }}
-      ENV: dev
+      ENV: "dev"
     secrets: inherit
