@@ -20,9 +20,6 @@ jobs:
     outputs:
       pr_id: ${{ steps.get_pr.outputs.pr_id }}
     steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
       - name: check PR
         id: check_pr
         run: |
