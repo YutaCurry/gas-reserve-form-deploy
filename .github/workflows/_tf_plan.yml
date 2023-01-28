@@ -2,13 +2,13 @@ name: callee terraform plan workflow
 on:
   workflow_call:
     inputs:
-      TF_WORK_DIR:
+      WORK_DIR:
         type: string
         required: true
       PR_ID:
         type: string
         required: true
-      BASE_BRANCH:
+      ENV:
         type: string
         required: true
     secrets:
@@ -23,9 +23,11 @@ on:
 
 env:
   STATE_BUCKET: "terraform-state-${{ secrets.APP_NAME }}"
-  STATE_PATH_SUFFIX: "frontend/terraform.tfstate"
+  STATE_PATH: "${{ inputs.ENV }}/frontend/terraform.tfstate"
   TF_VAR_appName: ${{ secrets.APP_NAME }}
-
+  TF_VAR_comment: ${{ secrets.COMMENT }}
+  TF_VAR_env: ${{ inputs.ENV }}
+  TF_WORK_DIR: ${{ WORK_DIR }}
 jobs:
   tf_plan:
     runs-on: ubuntu-latest
@@ -33,8 +35,6 @@ jobs:
       id-token: write
       contents: read
       pull-requests: write
-    env:
-      is-tfstate-branch: ${{ inputs.BASE_BRANCH == 'main' || inputs.BASE_BRANCH == 'develop' }}
     steps:
       - uses: actions/checkout@v3
       - uses: hashicorp/setup-terraform@v2
@@ -44,31 +44,16 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ap-northeast-1
-      - name: env create [PROD]
-        if: ${{ inputs.BASE_BRANCH == 'main'}}
-        run: |
-          echo "STATE_PATH=prod/${{ env.STATE_PATH_SUFFIX }}" >> $GITHUB_ENV
-          echo "TF_VAR_comment=[PROD]${{ secrets.COMMENT }}" >> $GITHUB_ENV
-          echo "TF_VAR_env=prod" >> $GITHUB_ENV
-      - name: env create [DEV]
-        if: ${{ inputs.BASE_BRANCH == 'develop'}}
-        run: |
-          echo "STATE_PATH=dev/${{ env.STATE_PATH_SUFFIX }}" >> $GITHUB_ENV
-          echo "TF_VAR_comment=[DEV]${{ secrets.COMMENT }}" >> $GITHUB_ENV
-          echo "TF_VAR_env=dev" >> $GITHUB_ENV
       - id: init
-        if: ${{ env.is-tfstate-branch }}
         run: |
           terraform init -backend-config="bucket=${{ env.STATE_BUCKET }}" -backend-config="key=${{ env.STATE_PATH }}"
         working-directory: ./bin/main
       - id: plan
-        if: ${{ env.is-tfstate-branch }}
         run: |
           terraform plan -no-color
         working-directory: ./bin/main
         continue-on-error: true
       - name: truncate terraform plan result
-        if: ${{ env.is-tfstate-branch }}
         run: |
           plan=$(cat <<'EOF'
           ${{ format('{0}{1}', steps.plan.outputs.stdout, steps.plan.outputs.stderr) }}
@@ -78,7 +63,6 @@ jobs:
           echo "${plan}" | grep -v 'Refreshing state' | tail -c 65000 >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
       - name: create comment from plan result
-        if: ${{ env.is-tfstate-branch }}
         uses: actions/github-script@v6
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
