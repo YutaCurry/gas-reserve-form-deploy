@@ -52,8 +52,7 @@ jobs:
         working-directory: ${{ inputs.WORK_DIR }}
       - id: apply
         run: |
-          # terraform apply -auto-approve -no-color
-          terraform plan -no-color
+          terraform apply -auto-approve -no-color
         working-directory: ${{ inputs.WORK_DIR }}
         continue-on-error: true
       - name: truncate terraform apply result
