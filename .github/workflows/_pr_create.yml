@@ -7,9 +7,6 @@ on:
         required: true
       reviewer:
         type: string
-        required: true    
-      gh_token:
-        type: string
         required: true
     outputs:
       pr_id:

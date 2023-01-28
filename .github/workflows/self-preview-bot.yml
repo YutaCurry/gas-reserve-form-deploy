@@ -9,7 +9,6 @@ jobs:
     with:
       base_branch: develop
       reviewer: YutaCurry
-      gh_token: ${{ github.token }}
   write_plan_pr:
     needs: create_pr
     if: ${{ needs.create_pr.outputs.pr_id != '' }}
