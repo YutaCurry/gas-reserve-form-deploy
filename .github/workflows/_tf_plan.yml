@@ -26,7 +26,6 @@ env:
   STATE_PATH: "${{ inputs.ENV }}/frontend/terraform.tfstate"
   TF_VAR_appName: ${{ secrets.APP_NAME }}
   TF_VAR_comment: ${{ secrets.COMMENT }}
-  TF_VAR_env: ${{ inputs.ENV }}
   TF_WORK_DIR: ${{ inputs.WORK_DIR }}
 jobs:
   tf_plan:
@@ -44,6 +43,13 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ap-northeast-1
+      - id: env
+        uses: ASzc/change-string-case-action@v5
+        with:
+          string: ${{ inputs.ENV }}
+      - name: env settings
+        run: |
+          echo "TF_VAR_env=${{ steps.env.outputs.uppercase }}" >> $GITHUB_ENV
       - id: init
         run: |
           terraform init -backend-config="bucket=${{ env.STATE_BUCKET }}" -backend-config="key=${{ env.STATE_PATH }}"
