@@ -16,5 +16,5 @@ jobs:
     with:
       WORK_DIR: bin/main
       PR_ID: ${{ needs.create_pr.outputs.pr_id }}
-      ENV: main
+      ENV: prod
     secrets: inherit
