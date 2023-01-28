@@ -27,7 +27,7 @@ env:
   TF_VAR_appName: ${{ secrets.APP_NAME }}
   TF_VAR_comment: ${{ secrets.COMMENT }}
   TF_VAR_env: ${{ inputs.ENV }}
-  TF_WORK_DIR: ${{ WORK_DIR }}
+  TF_WORK_DIR: ${{ inputs.WORK_DIR }}
 jobs:
   tf_plan:
     runs-on: ubuntu-latest
