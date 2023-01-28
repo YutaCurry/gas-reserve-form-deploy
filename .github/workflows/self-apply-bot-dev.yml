@@ -1,0 +1,17 @@
+name: create PR by github-actions[bot]
+on:
+  pull_request:
+    branches:
+      - 'develop'
+    types:
+      - closed
+env:
+  REVIEWER: YutaCurry
+jobs:
+  tf_apply:
+    if: github.event.pull_request.merged == true
+    uses: ./.github/workflows/_tf_apply.yml
+    with:
+      WORK_DIR: bin/main
+      ENV: dev
+    secrets: inherit

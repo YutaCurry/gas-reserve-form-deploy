@@ -1,0 +1,93 @@
+name: callee terraform plan workflow
+on:
+  workflow_call:
+    inputs:
+      WORK_DIR:
+        type: string
+        required: true
+      PR_ID:
+        type: string
+        required: true
+      ENV:
+        type: string
+        required: true
+    secrets:
+      AWS_ACCESS_KEY_ID:
+        required: true
+      AWS_SECRET_ACCESS_KEY:
+        required: true
+      COMMENT:
+        required: true
+      APP_NAME:
+        required: true
+
+env:
+  STATE_BUCKET: "terraform-state-${{ secrets.APP_NAME }}"
+  STATE_PATH: "${{ inputs.ENV }}/frontend/terraform.tfstate"
+  TF_VAR_appName: ${{ secrets.APP_NAME }}
+  TF_VAR_env: ${{ inputs.ENV }}
+jobs:
+  tf_plan:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v3
+      - uses: hashicorp/setup-terraform@v2
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-northeast-1
+      - id: env
+        uses: ASzc/change-string-case-action@v5
+        with:
+          string: ${{ inputs.ENV }}
+      - name: env settings
+        run: |
+          echo "TF_VAR_comment=[${{ steps.env.outputs.uppercase }}]${{ secrets.COMMENT }}" >> $GITHUB_ENV
+      - id: init
+        run: |
+          terraform init -backend-config="bucket=${{ env.STATE_BUCKET }}" -backend-config="key=${{ env.STATE_PATH }}"
+        working-directory: ${{ inputs.WORK_DIR }}
+      - id: plan
+        run: |
+          terraform plan -no-color
+        working-directory: ${{ inputs.WORK_DIR }}
+        continue-on-error: true
+      - name: truncate terraform plan result
+        run: |
+          plan=$(cat <<'EOF'
+          ${{ format('{0}{1}', steps.plan.outputs.stdout, steps.plan.outputs.stderr) }}
+          EOF
+          )
+          echo "PLAN<<EOF" >> $GITHUB_ENV
+          echo "${plan}" | grep -v 'Refreshing state' | tail -c 65000 >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+      - name: create comment from plan result
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const output = `#### Terraform Initialization ⚙️\`${{ steps.init.outcome }}\`
+            #### Terraform Plan 📖\`${{ steps.plan.outcome }}\`
+            <details><summary>Show Plan</summary>
+            
+            \`\`\`\n
+            ${ process.env.PLAN }
+            \`\`\`
+            
+            </details>
+            
+            *Pusher: @${{ github.actor }}, Action: \`${{ github.event_name }}\`, Working Directory: \`${{ inputs.WORK_DIR }}\`, Workflow: \`${{ github.workflow }}\`*`;
+
+            github.rest.issues.createComment({
+              issue_number: "${{ inputs.PR_ID }}",
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: output
+            })
+          
