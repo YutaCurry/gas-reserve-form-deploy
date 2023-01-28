@@ -11,6 +11,6 @@ jobs:
   tf_apply:
     uses: ./.github/workflows/_tf_apply.yml
     with:
-      TF_WORK_DIR: bin/main
-      BASE_BRANCH: main
+      WORK_DIR: bin/main
+      ENV: prod
     secrets: inherit
