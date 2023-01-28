@@ -15,6 +15,8 @@ on:
       pr_id:
         description: "作成したプルリクエストのID"
         value: ${{ jobs.create_pr.steps.get_pr.outputs.pr_id }}
+env:
+  GH_TOKEN: ${{ inputs.gh_token }}
 jobs:
   create_pr:
     runs-on: ubuntu-latest
