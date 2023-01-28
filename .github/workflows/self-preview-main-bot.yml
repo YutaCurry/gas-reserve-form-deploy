@@ -1,0 +1,20 @@
+name: create PR by github-actions[bot]
+on:
+  push:
+    branches:
+      - 'develop'
+jobs:
+  create_pr:
+    uses: ./.github/workflows/_pr_create.yml
+    with:
+      base_branch: main
+      reviewer: YutaCurry
+  write_plan_pr:
+    needs: create_pr
+    if: ${{ needs.create_pr.outputs.pr_id != '' }}
+    uses: ./.github/workflows/_tf_plan.yml
+    with:
+      WORK_DIR: bin/main
+      PR_ID: ${{ needs.create_pr.outputs.pr_id }}
+      ENV: main
+    secrets: inherit
