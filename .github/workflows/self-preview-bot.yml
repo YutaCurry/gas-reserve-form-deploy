@@ -1,4 +1,4 @@
-name: create PR by github-actions[bot]
+name: terraform plan dev
 on:
   push:
     branches:

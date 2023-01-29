@@ -1,4 +1,4 @@
-name: create PR by github-actions[bot]
+name: terraform apply main
 on:
   pull_request:
     branches:
